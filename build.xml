@@ -1,0 +1,34 @@
+<project name="MyProject" default="init" basedir=".">
+    <description>
+        packages a small jar equipped withe a java http client and junit test
+    </description>
+  <property environment="env"/>
+  <property name="src" location="src"/>
+  <property name="build" location="bin"/>
+  <property name="dist"  location="dist"/>
+  <property name="lib.dir"  location="lib"/>
+  <property file="test.properties"/>
+
+  <target name="init">
+   <jar destfile="${dist}/lib/mygithubtest.jar"
+       basedir="${build}"  />
+  </target>
+  
+  <path id="JUnit 4.libraryclasspath">
+    <pathelement location="../../../../../jars/junit_4/junit-4.10.jar"/>
+  </path>
+
+  <target name="test" depends="init">
+	<junit printsummary="yes" fork="yes" haltonfailure="yes">
+	    <jvmarg value="-DgithubUser=${env.githubUser}"/>
+		<jvmarg value="-DgithubPass=${env.githubPass}"/> 
+		<classpath>
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+			<path refid="JUnit 4.libraryclasspath"/>
+			<fileset dir="${dist}/lib" includes="*.jar"/>
+        </classpath>
+		<formatter type="xml"/>
+		<test name="com.test.endpoint.HttpPostReqTest"/>
+	</junit>
+  </target>
+</project>
